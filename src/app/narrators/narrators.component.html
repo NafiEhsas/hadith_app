@@ -1,0 +1,26 @@
+<div class="flex items-center justify-center w-full max-w-lg py-2 items-center">
+    <input type="search" hlmInput class="w-80 rounded-l-md text-right bg-gray-100" placeholder="راوی سرچ کول" 
+    [(ngModel)]="searchValue"
+    (input)="search(searchValue)"
+    >
+</div>
+
+<ng-scrollbar hlm class="h-72 border-border rounded-md">
+    <div class="h-72 overflow-y-scroll" style="height: 450px;">
+        <div id="narrators" *ngFor="let narrator of all_narrators">
+            <div class="flex items-center w-full h-auto  rounded-md py-2" [id]="narrator.name">
+                <div class="card">
+                    <div class="header bg-gray-100 text-right font-bold">
+                    <h2>{{narrator.name}}</h2>
+                </div>
+                <hr>
+                <div class="body w-full text-right">
+                    <p>{{narrator.info}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    </div>
+
+</ng-scrollbar>

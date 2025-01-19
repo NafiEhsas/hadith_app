@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Component,signal } from '@angular/core';
+import { DashboardComponent } from "./dashboard/dashboard.component";
 @Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
+imports: [
+    DashboardComponent
+],
+selector:'app-root',
+providers:[]
+,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'my-angular-app';
+  title = 'Hadith';
+ 
 }
