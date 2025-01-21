@@ -4,6 +4,7 @@ import { AllHadithComponent } from './all-hadith/all-hadith.component';
 import { NarratorsComponent } from './narrators/narrators.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { SiratComponent } from './sirat/sirat.component';
+import { Page404Component } from './page404/page404.component';
 
 export const routes: Routes = [
     {path:'app-home',component:HomeComponent},
@@ -11,6 +12,7 @@ export const routes: Routes = [
     {path:'app-about-us',component:AboutUsComponent},
     {path:'all-hadith',component:AllHadithComponent},
     {path:'app-narrators',component:NarratorsComponent},
-    {path:'',redirectTo:'app-home',pathMatch:'full'}
+    {path:'',redirectTo:'app-home',pathMatch:'full'},
+    {path:'**',component:Page404Component},
 
 ];
