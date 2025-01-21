@@ -1,128 +1,183 @@
-<div *ngIf="isViewedHadith==false; else displayFullHadith">
-    <div id="hadithSearchInput" class="absolute h-auto grid grid-row-2 
-    justify-center py-3  my-10 items-center rounded bg-gray-300 lg:w-full  w-80  " 
-        [class]="isSearch?'block':'hidden'">
-        <div class="flex w-80 lg:w-full justify-center items-center" >
-            <input type="text" hlmInput placeholder="سرچ حدیث" class="text-right outline " [(ngModel)]="searchValue"
-                (input)="search_the_hadith()">
-            <span class="text-gray-400 hover:text-red-100 hover:cursor-pointer" (click)="pop_search_input()">x</span>
+<div>
+    <div *ngIf="isTheHadithSearched else searchedHadithTemplate">
+        <div *ngIf="isViewedHadith==false; else displayFullHadith" class="flex justify-center">
+            <div id="hadithSearchInput" class="absolute h-auto grid grid-row-2 
+        justify-center py-3  my-10 items-center rounded bg-gray-300  w-80" [class]="isSearch?'block':'hidden'">
+                <div class="flex w-full lg:w-full justify-center items-center">
+                    <input type="text" hlmInput placeholder="سرچ حدیث" class="text-right outline mx-4 "
+                        [(ngModel)]="searchValue" (input)="search_the_hadith()">
+                    <span class="text-gray-400 hover:text-red-100 hover:cursor-pointer"
+                        (click)="pop_search_input()">x</span>
+                </div>
+                <div class="h-auto py-3 hover:cursor-pointer hover:opacity-20 active:opacity-10 text-right px-2"
+                    *ngFor="let searched_hadiths of search_matched_hadith">
+                    <p (click)="showSearchedHadith(searched_hadiths.title)">{{searched_hadiths.title}}</p>
+                    <hr class="font-bold">
+                </div>
+            </div>
+
+
+            <div [class]="isSearch?'containerToBlur':''">
+
+                <div class="flex justify-center ">
+                    <h1 class="font-bold text-center mx-10" style="font-size: x-large;">حدیثونه</h1>
+                    <button hlmBtn class="bg-gray-200 my-1" (click)="pop_search_input()"><i
+                            class="bi bi-search text-blue-600"></i></button>
+                </div>
+
+                <div id="copyAlert"
+                    class="absolute mx-40 h-10 py-2  justify-center text-center  rounded  bg-green-300 px-5"
+                    [class]="changeCopyAlert()?'hidden':'block'">
+                    <h1 class="text-black-800">copied!</h1>
+                </div>
+
+                <div id="hadithContainer"
+                    class="container overflow-y-auto grid py-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:px-3 lg:px-2 justify-between">
+
+                    <div id="hadithDiv" class=" bg-blue-100 shadow-lg rounded-md mx-4 my-5 "
+                        *ngFor="let hadith of all_hadiths let i = index">
+                        <div id="title" class="bg-gray-200 h-10 rounded-t-md text-right">
+                            <h1 class="font-bold">
+                                {{hadith.title}}
+                            </h1>
+
+                        </div>
+                        <div id="contents" class="bg-blue-200 h-32 text-right px-2">
+                            <p *ngIf="hadith.isTranslated == false && hadith.contents.length>300">
+                                {{hadith.contents.substring(0,300)}}
+                                <br>
+                                <span class="font-2 px-2 hover:cursor-pointer" (click)="viewFullHadith(i)">
+                                    <small class="text-xs text-gray-400">see more...</small>
+                                </span>
+                            </p>
+                            <p *ngIf="hadith.isTranslated == false && hadith.contents.length<300">{{hadith.contents}}
+                            </p>
+                            <p *ngIf="hadith.isTranslated == true && hadith.translate.length<300">{{hadith.translate}}
+                            </p>
+                            <p *ngIf="hadith.isTranslated==true && hadith.translate.length>300">
+                                {{hadith.translate.substring(0,190)}}
+                                <br>
+                                <span class="font-2 px-2 hover:cursor-pointer" (click)="viewFullHadith(i)">
+                                    <small class="text-xs text-gray-400">see more...</small>
+                                </span>
+
+                            </p>
+                        </div>
+                        <div class=" h-6 rounded-b-md flex px-5">
+
+                            <div class=" w-full h-4 text-right">
+                                <p class="font-bold">
+                                    ماخذ: <span>{{hadith.source}}</span>
+                                </p>
+                            </div>
+
+                            <div id="options" class=" border h-4 w-60 text-right">
+
+                                <i class="bi bi-files px-2 hover:opacity-20 hover:cursor-pointer"
+                                    (click)="[copyHadith(i)]"></i>
+                                <i class="bi bi-eye px-2 hover:opacity-20 hover:cursor-pointer"
+                                    (click)="viewFullHadith(i)"></i>
+                                <i class="bi bi-translate px-2 hover:opacity-20 hover:cursor-pointer"
+                                    (click)="translate_the_hadith(i)"></i>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
         </div>
-        <div class="h-auto py-3 hover:cursor-pointer hover:opacity-20 active:opacity-10 text-right px-2"
-            *ngFor="let searched_hadiths of search_matched_hadith">
-            <p>{{searched_hadiths.title}}</p>
-            <hr>
-        </div>
+
+
+        <ng-template #displayFullHadith>
+
+            <div id="copyAlert"
+                class="absolute mx-40 h-10 py-2 justify-center my-5 text-center  rounded  bg-green-300 px-5"
+                [class]="changeCopyAlert()?'hidden':'block'">
+                <h1 class="">copied!</h1>
+            </div>
+
+            <div class="grid px-10" id="viewHadithDiv">
+
+                <div class="grid grid-row-3 border rounded shadow-lg" id="viewHadith" style="width: 300px;">
+
+                    <div class="grid grid-cols-2 justify-center rounded-t-md h-10 lg:px-5 text-right bg-gray-300">
+                        <div class="h-10 font-bold sticky  w-full lg:mx-20">
+                            <h1>{{viewedHadithTitle}}</h1>
+                        </div>
+                        <div class="py-2">
+                            <button hlmBtn title="Remove view mode"
+                                class="bg-white-200 text-gray-800 hover:text-red-600 h-6 w-4 mx-2 rounded-md"
+                                (click)="viewFullHadith(0)">X</button>
+                        </div>
+                    </div>
+                    <div class="h-40 py-2 px-2 bg-blue-200 text-right lg:px-5 overflow-y-auto" id="viewedHadithContent">
+                        <p *ngIf="isViewedHadithTranslated==false">{{viewedHadithContent}}</p>
+                        <p *ngIf="isViewedHadithTranslated">{{viewedHadithTranslate}}</p>
+                    </div>
+                    <div class="h-10 bg-blue-300 rounded-b-md">
+                        <div class=" h-4 rounded-b-md flex lg:px-5 justify-center py-2">
+                            <div class=" w-80 h-2 text-right">
+                                <p class="font-bold">
+                                    ماخذ: <span>{{viewedHadithSource}}</span>
+                                </p>
+                            </div>
+
+                            <div id="options" class="h-2 w-20 text-right">
+                                <i class="bi bi-files px-2 hover:opacity-20 hover:cursor-pointer"
+                                    (click)="[copyHadith(0)]"></i>
+                                <i class="bi bi-translate px-2 hover:opacity-20 hover:cursor-pointer"
+                                    (click)="translate_viewed_hadith()"></i>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
     </div>
-  
-
-<div [class]="isSearch?'containerToBlur':''">
-
-    <div class="flex justify-center ">
-        <h1 class="font-bold text-center mx-10" style="font-size: x-large;">حدیثونه</h1>
-        <button hlmBtn class="bg-gray-200 my-1" (click)="pop_search_input()"><i class="bi bi-search text-blue-600"></i></button>
-        </div>
-
+    <ng-template #searchedHadithTemplate>
         <div id="copyAlert" class="absolute mx-40 h-10 py-2  justify-center text-center  rounded  bg-green-300 px-5"
             [class]="changeCopyAlert()?'hidden':'block'">
             <h1 class="text-black-800">copied!</h1>
         </div>
-        
-        <div id="hadithContainer" class="container  overflow-y-auto grid  py-3 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:px-2 lg:px-2 justify-center"
-        >
+        <button hlmBtn class="bi bi-arrow-left m-5" (click)="[isTheHadithSearched = true,isSearch = false]"></button>
+        <div class="grid px-10" id="viewHadithDiv">
 
-            <div id="hadithDiv"
-                class=" bg-blue-100 shadow-lg rounded-md my-5 " *ngFor="let hadith of all_hadiths let i = index">
+            <div class="grid grid-row-3 border rounded shadow-lg" id="viewHadith" style="width: 300px;">
 
-                <div id="title" class="bg-gray-200 h-10 rounded-t-md text-right">
-                    <h1 class="font-bold">
-                        {{hadith.title}}
-                    </h1>
-
-                </div>
-                <div id="contents" class="bg-blue-200 h-32 text-right">
-                    <p *ngIf="hadith.isTranslated == false && hadith.contents.length>300">
-                        {{hadith.contents.substring(0,450)}}
-                        <br>
-                        <span class="font-2 px-2 hover:cursor-pointer" (click)="viewFullHadith(i)">see more...</span>
-                    </p>
-                    <p *ngIf="hadith.isTranslated == false && hadith.contents.length<300">{{hadith.contents}}</p>
-                    <p *ngIf="hadith.isTranslated == true && hadith.translate.length<300">{{hadith.translate}}</p>
-                    <p *ngIf="hadith.isTranslated==true && hadith.translate.length>300">
-                        {{hadith.translate.substring(0,260)}}
-                        <br>
-                        <span class="font-2 px-2 hover:cursor-pointer" (click)="viewFullHadith(i)">see more...</span>
-
-                    </p>
-                </div>
-                <div class=" h-6 rounded-b-md flex px-5">
-
-                    <div class=" w-full h-4 text-right">
-                        <p class="font-bold">
-                            ماخذ: <span>{{hadith.source}}</span>
-                        </p>
+                <div class="grid grid-cols-2 justify-center rounded-t-md h-10 lg:px-5 text-right bg-gray-300">
+                    <div class="h-10 font-bold sticky  w-full lg:mx-20">
+                        <h1>{{searchedHadith.title}}</h1>
                     </div>
-                    
-                    <div id="options" class=" border h-4 w-60 text-right">
-
-                        <i class="bi bi-files px-2 hover:opacity-20 hover:cursor-pointer" (click)="[copyHadith(i)]"></i>
-                        <i class="bi bi-eye px-2 hover:opacity-20 hover:cursor-pointer" (click)="viewFullHadith(i)"></i>
-                        <i class="bi bi-translate px-2 hover:opacity-20 hover:cursor-pointer"
-                            (click)="translate_the_hadith(i)"></i>
-
-                    </div>
-
-
                 </div>
-                
+                <div class="h-40 py-2 bg-blue-200 text-right lg:px-5 px-2 overflow-y-auto" id="viewedHadithContent">
+                    <p *ngIf="isSearchedHadithTranslated==false">{{searchedHadith.contents}}</p>
+                    <p *ngIf="isSearchedHadithTranslated">{{searchedHadith.translate}}</p>
+                </div>
+                <div class="h-10 bg-blue-300 rounded-b-md">
+                    <div class=" h-4 rounded-b-md flex lg:px-5 justify-center py-2">
+                        <div class=" w-80 h-2 text-right">
+                            <p class="font-bold">
+                                ماخذ: <span>{{searchedHadith.source}}</span>
+                            </p>
+                        </div>
+
+                        <div id="options" class="h-2 w-20 text-right">
+                            <i class="bi bi-files px-2 hover:opacity-20 hover:cursor-pointer"
+                                (click)="copyHadith(searchedHadith.id)"></i>
+                            <i class="bi bi-translate px-2 hover:opacity-20 hover:cursor-pointer"
+                                (click)="translateSearchedHadith()"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-
         </div>
-
-    </div>
+    </ng-template>
 </div>
-
-    
-    <ng-template #displayFullHadith>
-        <div id="copyAlert" class="absolute mx-40 h-10 py-2 justify-center my-5 text-center  rounded  bg-green-300 px-5"
-        [class]="changeCopyAlert()?'hidden':'block'">
-        <h1 class="">copied!</h1>
-    </div>
-    
-    <div class="grid px-10" id="viewHadithDiv">
-
-        <div class="grid grid-row-3 border rounded shadow-lg">
-
-            <div class="grid grid-cols-2 justify-center rounded-t-md h-10 px-5 text-right bg-gray-300">
-                <div class="h-10 font-bold sticky  w-full mx-20">
-                    <h1>{{viewedHadithTitle}}</h1>
-                </div>
-                <div class="py-2">
-                    <button hlmBtn title="Remove view mode"
-                        class="bg-white-200 text-black-200 hover:text-red-600 h-6 w-auto rounded-md"
-                        (click)="viewFullHadith(0)">X</button>
-                </div>
-            </div>
-            <div class="h-40 py-2 bg-blue-200 text-right px-5 overflow-y-auto" id="viewedHadithContent">
-                <p *ngIf="isViewedHadithTranslated==false">{{viewedHadithContent}}</p>
-                <p *ngIf="isViewedHadithTranslated">{{viewedHadithTranslate}}</p>
-            </div>
-            <div class="h-10 bg-blue-300 rounded-b-md">
-                <div class=" h-4 rounded-b-md flex px-5">
-                    <div class=" w-80 h-2 text-right">
-                        <p class="font-bold">
-                            ماخذ: <span>{{viewedHadithSource}}</span>
-                        </p>
-                    </div>
-
-                    <div id="options" class="h-2 w-20   text-right">
-                        <i class="bi bi-files px-2 hover:opacity-20 hover:cursor-pointer" (click)="[copyHadith(0)]"></i>
-                        <i class="bi bi-translate px-2 hover:opacity-20 hover:cursor-pointer"
-                            (click)="translate_viewed_hadith()"></i>
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>

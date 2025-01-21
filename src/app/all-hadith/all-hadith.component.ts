@@ -31,6 +31,7 @@ showAndHideAlert(){
 }
 
 copyHadith(id:number):void{
+  
 if(this.isViewedHadith==true){
   this.showAndHideAlert()
   if(this.isViewedHadithTranslated){
@@ -40,9 +41,27 @@ if(this.isViewedHadith==true){
     navigator.clipboard.writeText(this.viewedHadithContent)
     return
   }
-}else{
+} else if(this.isTheHadithSearched){
+  let i =0;
+  this.showAndHideAlert()
+  while(i<this.all_hadiths.length){
+    if(this.all_hadiths[i].id == id){
+      if(this.isSearchedHadithTranslated==true){
+        navigator.clipboard.writeText(this.all_hadiths[i].translate)
+        return
+      }
+      else{
+        navigator.clipboard.writeText(this.all_hadiths[i].contents)
+        return
+      }
+      
+    }
+    i++
+  }
+    
+}
+else{
 
-  
   let i =0;
   this.showAndHideAlert()
   while(i<this.all_hadiths.length){
@@ -50,7 +69,8 @@ if(this.isViewedHadith==true){
       if(this.all_hadiths[i].isTranslated==true){
         navigator.clipboard.writeText(this.all_hadiths[i].translate)
         return
-      }else{
+      }
+      else{
         navigator.clipboard.writeText(this.all_hadiths[i].contents)
         return
       }
@@ -121,4 +141,36 @@ search_the_hadith(){
     i++
   }
 }
+
+isSearchedHadithTranslated = false
+translateSearchedHadith(){
+  this.isSearchedHadithTranslated=!this.isSearchedHadithTranslated
 }
+
+isTheHadithSearched = true
+searchedHadith = {
+  id:0,
+  title:'',
+  contents:'',
+  translate:'',
+  source:''
+}
+showSearchedHadith(title:string){
+  this.isTheHadithSearched = !this.isTheHadithSearched
+  let i =0
+  while(i<this.all_hadiths.length){
+    if(title==this.all_hadiths[i].title){
+      this.searchedHadith ={
+        id:this.all_hadiths[i].id,
+        title: this.all_hadiths[i].title,
+        contents: this.all_hadiths[i].contents,
+        translate:this.all_hadiths[i].translate,
+        source: this.all_hadiths[i].source  
+      }
+    }
+    i++
+  }
+
+}
+}
+

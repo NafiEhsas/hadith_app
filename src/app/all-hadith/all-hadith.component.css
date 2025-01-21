@@ -44,7 +44,7 @@
 }
 
 * {
-    font-weight: bold;
+    
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
@@ -75,8 +75,8 @@
 }
 
 #hadithDiv {
-    height: 190px;
-    width: 400px;
+    /* height: 190px; */
+    /* width: 400px; */
     margin-bottom: 5px;
 }
 
@@ -86,19 +86,19 @@
      
 }
 
-@media (max-width:600px) {
+@media (max-width:400px) {
     #hadithContainer {
-        height: 670px;
+        height: 600px;
+        width: fit-content;
     }
 
     #hadithDiv {
         width: 300px;
     }
 
-    #viewHadithDiv{
+    #viewHadith{
         width: 300px;
-        height: 400px;
-         align-items: center;
-         
     }
+   
 }
+
