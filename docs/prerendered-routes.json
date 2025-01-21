@@ -1,0 +1,10 @@
+{
+  "routes": {
+    "/hadith_app": {},
+    "/hadith_app/all-hadith": {},
+    "/hadith_app/app-about-us": {},
+    "/hadith_app/app-home": {},
+    "/hadith_app/app-narrators": {},
+    "/hadith_app/app-sirat": {}
+  }
+}
